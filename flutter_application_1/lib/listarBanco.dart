@@ -20,6 +20,26 @@ class _listarBancoState extends State<listarBanco> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: Text('Listar dados do Banco de Dados (API) ')),
+      body: FutureBuilder(
+        future: listarDadosBanco(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print('Erro na lista de Dados');
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    List list = snapshot.data;
+                    return ListTile(
+                      title: Text(list[index]['nome']),
+                      subtitle: Text(list[index]['sobrenome']),
+                    );
+                  },
+                )
+              : CircularProgressIndicator();
+        },
+      ),
+    );
   }
 }
