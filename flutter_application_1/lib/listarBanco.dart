@@ -1,16 +1,16 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'CadastroBanco.dart';
 
-class listarBanco extends StatefulWidget {
-  const listarBanco({super.key});
+class ListarBanco extends StatefulWidget {
+  const ListarBanco({super.key});
 
   @override
-  State<listarBanco> createState() => _listarBancoState();
+  State<ListarBanco> createState() => _ListarBancoState();
 }
 
-class _listarBancoState extends State<listarBanco> {
+class _ListarBancoState extends State<ListarBanco> {
   Future listarDadosBanco() async {
     var url = "http://localhost:8080/gabriel%20programas/conecta.php";
     var resultado = await http.get(Uri.parse(url));
@@ -21,11 +21,27 @@ class _listarBancoState extends State<listarBanco> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Listar dados do Banco de Dados (API) ')),
+      appBar: AppBar(
+        title: Text('Listar dados do Banco de Dados (API)'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CadastroBanco()),
+              );
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder(
         future: listarDadosBanco(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) print('Erro na lista de Dados');
+          if (snapshot.hasError) {
+            // Use a logging framework instead of print in production code
+            debugPrint('Erro na lista de Dados');
+          }
           return snapshot.hasData
               ? ListView.builder(
                   itemCount: snapshot.data.length,
